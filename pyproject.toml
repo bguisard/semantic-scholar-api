@@ -1,6 +1,6 @@
 [project]
 name = "semantic-scholar-api"
-version = "0.1.0"
+version = "0.1.1"
 description = "Python client for the Semantic Scholar API"
 readme = "README.md"
 authors = [
@@ -13,8 +13,6 @@ dependencies = [
     "tenacity>=9.0.0",
 ]
 
-[project.scripts]
-semantic-scholar-api = "semantic_scholar:main"
 
 [project.urls]
 Homepage = "https://github.com/bguisard/semantic-scholar-api"
