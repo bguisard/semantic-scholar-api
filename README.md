@@ -27,6 +27,4 @@ paper = await client.get_paper("paper-id")
 
 - Async/await support
 - Comprehensive API coverage
-- Type hints throughout
-- Robust error handling
 - Rate limiting built-in
