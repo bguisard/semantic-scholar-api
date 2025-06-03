@@ -1,5 +1,7 @@
 # Semantic Scholar Python Client
 
+![CI](https://github.com/bguisard/semantic-scholar-api/actions/workflows/ci.yml/badge.svg)
+
 A Python client for the [Semantic Scholar API](https://www.semanticscholar.org/product/api).
 
 ## Installation

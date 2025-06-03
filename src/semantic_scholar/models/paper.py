@@ -1,7 +1,7 @@
 """Paper-related models for the Semantic Scholar API client."""
 
 from datetime import date
-from typing import Any, TypeVar
+from typing import Any, TypeVar, cast
 
 from pydantic import Field
 
@@ -167,7 +167,7 @@ class AutocompletePaper(BaseModel):
 class PaperAutocomplete(BaseModel):
     """Response model for paper autocomplete endpoint."""
 
-    matches: list[AutocompletePaper] = Field(default_factory=list)
+    matches: list[AutocompletePaper] = Field(default_factory=lambda: cast(list[AutocompletePaper], []))
     """List of matching papers for autocomplete."""
 
 
