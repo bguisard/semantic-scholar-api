@@ -2,8 +2,6 @@
 
 from typing import Any
 
-import pytest
-
 from semantic_scholar.models.common import (
     CitationStyles,
     Embedding,
@@ -105,13 +103,29 @@ class TestS2FieldsOfStudy:
         assert field.category == "Computer Science"
         assert field.source == "external"
 
-    def test_required_fields(self):
-        """Test that required fields are enforced."""
-        with pytest.raises(ValueError):
-            FieldsOfStudy.model_validate({})
+    def test_missing_all_fields(self):
+        """Test that all fields are optional.
 
-        with pytest.raises(ValueError):
-            FieldsOfStudy.model_validate({"category": "Computer Science"})
+        This test prevents regressions in the model validation, because the
+        semantic scholar API occasionally has missing data for arbitrary fields
+        in the s2FieldsOfStudy response.
+        """
+        # Works with empty dict since all fields are now optional
+        field = FieldsOfStudy.model_validate({})
+        assert field.category is None
+        assert field.source is None
 
-        with pytest.raises(ValueError):
-            FieldsOfStudy.model_validate({"source": "external"})
+        # Works with only category
+        field = FieldsOfStudy.model_validate({"category": "Computer Science"})
+        assert field.category == "Computer Science"
+        assert field.source is None
+
+        # Works with only source
+        field = FieldsOfStudy.model_validate({"source": "external"})
+        assert field.category is None
+        assert field.source == "external"
+
+        # Works with null values
+        field = FieldsOfStudy.model_validate({"category": None, "source": None})
+        assert field.category is None
+        assert field.source is None

@@ -2,6 +2,7 @@ import logging
 from typing import Any
 
 from semantic_scholar.api.clients import APIResponse, AsyncSemanticScholarClient
+from semantic_scholar.api.exceptions import ResourceNotFoundError
 from semantic_scholar.models import (
     Author,
     AuthorBatch,
@@ -646,7 +647,12 @@ class SemanticScholar:
             fields_of_study,
         )
 
-        return await self.get_paper(psm.data[0].paperId, fields)
+        paper_id = psm.data[0].paperId
+        if paper_id is None:
+            msg = "No paper found matching the query"
+            raise ResourceNotFoundError(msg)
+
+        return await self.get_paper(paper_id, fields)
 
     async def get_recommendations_from_paper(
         self, paper_id: str, fields: list[str] | None = None

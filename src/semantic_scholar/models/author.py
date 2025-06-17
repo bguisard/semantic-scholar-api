@@ -9,7 +9,7 @@ from semantic_scholar.models.paper import Paper
 class Author(BaseModel):
     """Author model with basic information."""
 
-    authorId: str
+    authorId: str | None = None
     """Semantic Scholar's unique ID for the author."""
 
     externalIds: dict[str, Any] | None = None

@@ -6,30 +6,30 @@ from semantic_scholar.models.base import BaseModel
 class SnippetOffset(BaseModel):
     """Position information for a snippet in a paper."""
 
-    start: int
+    start: int | None = None
     """Start position of the snippet."""
 
-    end: int
+    end: int | None = None
     """End position of the snippet."""
 
 
 class Sentence(BaseModel):
     """Sentence boundary information."""
 
-    start: int
+    start: int | None = None
     """Start position of the sentence."""
 
-    end: int
+    end: int | None = None
     """End position of the sentence."""
 
 
 class RefMention(BaseModel):
     """Information about a reference mention in a snippet."""
 
-    start: int
+    start: int | None = None
     """Start position of the reference mention."""
 
-    end: int
+    end: int | None = None
     """End position of the reference mention."""
 
     matchedPaperCorpusId: str | None = None
@@ -62,7 +62,7 @@ class OpenAccessInfo(BaseModel):
 class SnippetPaper(BaseModel):
     """Paper information included with a snippet."""
 
-    corpusId: str
+    corpusId: str | None = None
     """Semantic Scholar's identifier for the paper."""
 
     title: str | None = None

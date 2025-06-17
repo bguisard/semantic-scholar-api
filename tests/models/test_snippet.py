@@ -46,13 +46,13 @@ class TestSnippet:
         sentence = snippet.annotations.sentences[0]
         assert isinstance(sentence, Sentence)
         assert sentence.start == 0
-        assert sentence.end == 120
+        assert sentence.end is None
 
         assert snippet.annotations.refMentions is not None
         assert len(snippet.annotations.refMentions) == 1
         mention = snippet.annotations.refMentions[0]
         assert isinstance(mention, RefMention)
-        assert mention.start == 377
+        assert mention.start is None
         assert mention.end == 402
         assert mention.matchedPaperCorpusId == "7377848"
 
@@ -60,7 +60,7 @@ class TestSnippet:
         """Test snippet offset."""
         assert snippet.snippetOffset is not None
         assert isinstance(snippet.snippetOffset, SnippetOffset)
-        assert snippet.snippetOffset.start == 24506
+        assert snippet.snippetOffset.start is None
         assert snippet.snippetOffset.end == 25694
 
 
@@ -80,36 +80,57 @@ class TestSnippetRequiredFields:
 class TestSnippetOffset:
     """Tests for the SnippetOffset model."""
 
-    def test_required_fields(self):
-        """Test that start and end are required."""
-        with pytest.raises(ValueError):
-            SnippetOffset.model_validate({})
+    def test_missing_all_fields(self):
+        """Test that start and end are now optional.
 
-        with pytest.raises(ValueError):
-            SnippetOffset.model_validate({"start": 120})
+        This test prevents regressions in the model validation, because the
+        semantic scholar API occasionally has missing data for arbitrary fields
+        in the snippet response.
+        """
+        offset = SnippetOffset.model_validate({})
+        assert offset.start is None
+        assert offset.end is None
 
-        with pytest.raises(ValueError):
-            SnippetOffset.model_validate({"end": 350})
+        offset = SnippetOffset.model_validate({"start": 120})
+        assert offset.start == 120
+        assert offset.end is None
+
+        offset = SnippetOffset.model_validate({"end": 350})
+        assert offset.start is None
+        assert offset.end == 350
+
+        offset = SnippetOffset.model_validate({"start": None, "end": None})
+        assert offset.start is None
+        assert offset.end is None
 
 
 class TestSentence:
     """Tests for the Sentence model."""
 
-    def test_required_fields(self):
-        """Test that start and end are required."""
-        with pytest.raises(ValueError):
-            Sentence.model_validate({})
+    def test_missing_all_fields(self):
+        """Test that start and end are now optional."""
+        sentence = Sentence.model_validate({})
+        assert sentence.start is None
+        assert sentence.end is None
+
+        sentence = Sentence.model_validate({"start": None, "end": None})
+        assert sentence.start is None
+        assert sentence.end is None
 
 
 class TestRefMention:
     """Tests for the RefMention model."""
 
-    def test_required_fields(self):
-        """Test that start and end are required."""
-        with pytest.raises(ValueError):
-            RefMention.model_validate({})
+    def test_missing_all_fields(self):
+        """Test that start and end are now optional."""
+        mention = RefMention.model_validate({})
+        assert mention.start is None
+        assert mention.end is None
 
-        # matchedPaperCorpusId is optional
+        mention = RefMention.model_validate({"start": None, "end": None})
+        assert mention.start is None
+        assert mention.end is None
+
         mention = RefMention.model_validate({"start": 45, "end": 65})
         assert mention.start == 45
         assert mention.end == 65
@@ -119,7 +140,7 @@ class TestRefMention:
 class TestSnippetAnnotations:
     """Tests for the SnippetAnnotations model."""
 
-    def test_optional_fields(self):
+    def test_missing_all_fields(self):
         """Test that all fields are optional."""
         annotations = SnippetAnnotations()
         assert annotations.sentences is None
@@ -146,7 +167,7 @@ class TestOpenAccessInfo:
             == "This content is made available under the terms of the Creative Commons Attribution License."
         )
 
-    def test_optional_fields(self):
+    def test_missing_all_fields(self):
         """Test that all fields are optional."""
         info = OpenAccessInfo()
         assert info.license is None
@@ -164,7 +185,7 @@ class TestSnippetPaper:
         return response.data[0].paper
 
     def test_real_response(self, paper: SnippetPaper):
-        assert paper.corpusId == "123456"
+        assert paper.corpusId is None
         assert paper.title == "Advances in Machine Learning Theory"
         assert paper.authors == ["Jane Smith", "John Doe"]
         assert paper.openAccessInfo is not None
@@ -177,10 +198,14 @@ class TestSnippetPaper:
             "information for your use."
         )
 
-    def test_required_fields(self):
-        """Test that corpusId is required."""
-        with pytest.raises(ValueError):
-            SnippetPaper.model_validate({})
+    def test_missing_all_fields(self):
+        """Test that all fields are optional."""
+        paper = SnippetPaper.model_validate({})
+        assert paper.corpusId is None
+        assert paper.title is None
+
+        paper = SnippetPaper.model_validate({"corpusId": None})
+        assert paper.corpusId is None
 
 
 class TestSnippetMatch:

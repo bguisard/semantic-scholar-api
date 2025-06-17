@@ -21,7 +21,7 @@ from semantic_scholar.models.common import (
 class BasePaper(BaseModel):
     """Base paper model with common fields."""
 
-    paperId: str
+    paperId: str | None = None
     """Semantic Scholar's primary unique identifier for a paper."""
 
     corpusId: int | None = None
@@ -174,7 +174,7 @@ class PaperAutocomplete(BaseModel):
 class PaperSearchMatch(BaseModel):
     """Paper match from title search endpoint."""
 
-    paperId: str
+    paperId: str | None = None
     """The paper's primary unique identifier."""
 
     title: str | None = None
