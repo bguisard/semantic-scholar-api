@@ -39,8 +39,8 @@ def mock_server_paper_response() -> dict[str, Any]:
         "fieldsOfStudy": ["Computer Science"],
         "s2FieldsOfStudy": [
             {"category": "Computer Science", "source": "external"},
-            {"category": "Computer Science", "source": "s2-fos-model"},
-            {"category": "Mathematics", "source": "s2-fos-model"},
+            {"category": None, "source": "s2-fos-model"},
+            {"category": "Mathematics", "source": None},
         ],
         "publicationTypes": ["Review", "Journal Article"],
         "publicationDate": "2018-06-01",
@@ -52,13 +52,13 @@ def mock_server_paper_response() -> dict[str, Any]:
         "citationStyles": {
             "bibtex": "@article{smith2018advances, title={Advances in Machine Learning Theory}, author={Smith, Jane}}"
         },
-        "authors": [{"authorId": "a12345", "name": "Jane Smith"}, {"authorId": "a67890", "name": "John Doe"}],
+        "authors": [{"authorId": "a12345", "name": "Jane Smith"}, {"authorId": None, "name": "John Doe"}],
         "citations": [
             {
                 "paperId": "p234567",
                 "title": "An Overview of Machine Learning Methods",
                 "year": 2019,
-                "authors": [{"authorId": "a23456", "name": "Alice Johnson"}],
+                "authors": [{"authorId": None, "name": "Alice Johnson"}],
             }
         ],
         "references": [
@@ -101,7 +101,7 @@ def mock_server_author_response() -> dict[str, Any]:
                 "year": 2018,
                 "authors": [
                     {"authorId": "a12345", "name": "Jane Smith"},
-                    {"authorId": "a67890", "name": "John Doe"},
+                    {"authorId": None, "name": "John Doe"},
                 ],
             },
             {"paperId": "p789012", "title": "Neural Network Applications", "year": 2021},
@@ -148,11 +148,11 @@ def mock_server_paper_search_response() -> dict[str, Any]:
                 "authors": [{"authorId": "a12345", "name": "Jane Smith"}],
             },
             {
-                "paperId": "p789012",
+                "paperId": None,
                 "title": "Neural Network Applications",
                 "abstract": "Another abstract...",
                 "year": 2019,
-                "authors": [{"authorId": "a67890", "name": "John Doe"}],
+                "authors": [{"authorId": None, "name": "John Doe"}],
             },
         ],
     }
@@ -300,15 +300,15 @@ def mock_server_snippet_search_response() -> dict[str, Any]:
                     "text": "In this paper, we discuss the construction of a graph...",
                     "snippetKind": "body",
                     "section": "Introduction",
-                    "snippetOffset": {"start": 24506, "end": 25694},
+                    "snippetOffset": {"start": None, "end": 25694},
                     "annotations": {
-                        "sentences": [{"start": 0, "end": 120}],
-                        "refMentions": [{"start": 377, "end": 402, "matchedPaperCorpusId": "7377848"}],
+                        "sentences": [{"start": 0, "end": None}],
+                        "refMentions": [{"start": None, "end": 402, "matchedPaperCorpusId": "7377848"}],
                     },
                 },
                 "score": 0.562,
                 "paper": {
-                    "corpusId": "123456",
+                    "corpusId": None,
                     "title": "Advances in Machine Learning Theory",
                     "authors": ["Jane Smith", "John Doe"],
                     "openAccessInfo": {

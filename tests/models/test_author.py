@@ -42,22 +42,28 @@ class TestAuthor:
         assert paper.authors is not None
         assert len(paper.authors) == 2
         assert paper.authors[0].authorId == "a12345"
-        assert paper.authors[1].authorId == "a67890"
+        assert paper.authors[1].authorId is None
 
     def test_external_ids(self, author: Author):
         """Test author external IDs."""
         assert author.externalIds is not None
         assert author.externalIds["GoogleScholar"] == ["1234567890"]
 
-    def test_missing_required_fields(self):
-        """Test that models fail when required fields are missing."""
-        # Author requires authorId
-        with pytest.raises(ValueError):
-            Author.model_validate({})
+    def test_missing_all_fields(self):
+        """Test that models work when all fields are optional.
 
-        # But works with just authorId
+        This test prevents regressions in the model validation, because the
+        semantic scholar API occasionally has missing data for arbitrary fields
+        in the author response.
+        """
+        author = Author.model_validate({})
+        assert author.authorId is None
+
         author = Author.model_validate({"authorId": "a12345"})
         assert author.authorId == "a12345"
+
+        author = Author.model_validate({"authorId": None})
+        assert author.authorId is None
 
 
 class TestAuthorBatch:

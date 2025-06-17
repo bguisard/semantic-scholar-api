@@ -35,15 +35,23 @@ class TestBasePaper:
 
         assert paper.paperId == "p123456"
 
-    def test_required_fields(self):
-        """Test that paperId is required."""
-        with pytest.raises(ValueError):
-            BasePaper.model_validate({})
+    def test_missing_all_fields(self):
+        """Test that all fields are optional.
 
-        # Other fields are optional
+        This test prevents regressions in the model validation, because the
+        semantic scholar API occasionally has missing data for arbitrary fields
+        in the paper response.
+        """
+        paper = BasePaper.model_validate({})
+        assert paper.paperId is None
+        assert paper.title is None
+
         paper = BasePaper.model_validate({"paperId": "p123456"})
         assert paper.paperId == "p123456"
         assert paper.title is None
+
+        paper = BasePaper.model_validate({"paperId": None})
+        assert paper.paperId is None
 
 
 class TestPaper:
@@ -108,10 +116,10 @@ class TestPaper:
         assert isinstance(paper.s2FieldsOfStudy[0], FieldsOfStudy)
         assert paper.s2FieldsOfStudy[0].category == "Computer Science"
         assert paper.s2FieldsOfStudy[0].source == "external"
-        assert paper.s2FieldsOfStudy[1].category == "Computer Science"
+        assert paper.s2FieldsOfStudy[1].category is None
         assert paper.s2FieldsOfStudy[1].source == "s2-fos-model"
         assert paper.s2FieldsOfStudy[2].category == "Mathematics"
-        assert paper.s2FieldsOfStudy[2].source == "s2-fos-model"
+        assert paper.s2FieldsOfStudy[2].source is None
 
     def test_journal(self, paper: Paper) -> None:
         """Test paper journal."""
@@ -273,6 +281,7 @@ class TestPaperSearchBatch:
         assert batch.total == 15117
         assert len(batch.data) == 2
         assert batch.data[0].paperId == "p123456"
+        assert batch.data[1].paperId is None
         assert batch.data[1].title == "Neural Network Applications"
 
 
@@ -336,7 +345,11 @@ class TestPaperSearchMatch:
         assert match.title == "Advances in Machine Learning Theory"
         assert match.matchScore == 174.2298
 
-    def test_required_fields(self):
-        """Test that paperId is required."""
-        with pytest.raises(ValueError):
-            PaperSearchMatch.model_validate({})
+    def test_missing_all_fields(self):
+        """Test that all fields are optional."""
+        match = PaperSearchMatch.model_validate({})
+        assert match.paperId is None
+        assert match.title is None
+
+        match = PaperSearchMatch.model_validate({"paperId": None})
+        assert match.paperId is None

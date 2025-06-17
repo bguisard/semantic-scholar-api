@@ -6,7 +6,7 @@ from semantic_scholar.models.base import BaseModel
 class AuthorRef(BaseModel):
     """Minimal author reference used in paper models."""
 
-    authorId: str
+    authorId: str | None = None
     name: str | None = None
 
 
@@ -82,8 +82,8 @@ class CitationStyles(BaseModel):
 class FieldsOfStudy(BaseModel):
     """Field of study with source information."""
 
-    category: str
+    category: str | None = None
     """The field of study category."""
 
-    source: str
+    source: str | None = None
     """The source of the classification (e.g., 'external', 's2-fos-model')."""
